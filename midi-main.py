@@ -6,14 +6,18 @@ import random
 
 # re-do all these functions as a separate file, and add logic
 def transformKickEvent(event):
-  return midi.NoteOnEvent(tick=event.tick, velocity=event.data[1], pitch=event.data[0])
+  newVelocity = event.data[1] + random.randint(-10, 10)
+  return midi.NoteOnEvent(tick=event.tick, velocity=newVelocity, pitch=event.data[0])
 
 def transformSnareEvent(event):
-  return midi.NoteOnEvent(tick=event.tick, velocity=event.data[1], pitch=event.data[0])
+  newVelocity = event.data[1] + random.randint(-5, 25)
+  newTick = event.tick + random.randint(0,5)
+  return midi.NoteOnEvent(tick=newTick, velocity=newVelocity, pitch=event.data[0])
 
 def transformHiHatEvent(event):
   newVelocity = event.data[1] + random.randint(-25, 25)
-  return midi.NoteOnEvent(tick=event.tick, velocity=event.data[1], pitch=event.data[0])
+  newTick = event.tick + random.randint(0,12)
+  return midi.NoteOnEvent(tick=newTick, velocity=newVelocity, pitch=event.data[0])
 
 def transformEvent(event):
   # logic to transform event based on the note/instrument
@@ -31,7 +35,7 @@ pattern = midi.read_midifile("basic_drum.mid")
 print pattern
 
 # Instantiate new track to write midi to
-newPattern = midi.Pattern()
+newPattern = midi.Pattern(tracks=[], resolution=480, format=1, tick_relative=True)
 track = midi.Track()
 newPattern.append(track)
 
@@ -45,8 +49,8 @@ for event in pattern[0]:
     # modifiedNoteEvent = midi.NoteOnEvent(tick=event.tick, velocity=event.data[1], pitch=(event.data[0]+10))
     modifiedNoteEvent = transformEvent(event)
     track.append(modifiedNoteEvent)
-    print("ORIGINAL: ", event)
-    print("MODIFIED: ", modifiedNoteEvent)
+  else: #type(event) is midi.events.NoteOffEvent:
+    track.append(event)
 
 # transform entire sequence of events with some sinusoidal function here
 # extract this function out to a separate module
@@ -58,4 +62,6 @@ def modulateTrackTime(track):
 eot = midi.EndOfTrackEvent(tick=1)
 track.append(eot)
 midi.write_midifile("transformed_drums.mid", newPattern)
+print "NEW PATTERN:"
+print newPattern
     
