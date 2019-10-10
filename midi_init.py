@@ -1,16 +1,16 @@
 import midi
 from transforms import transformEvent
 
-# Read in midi file to transform
+# Read in MIDI file to transform
 pattern = midi.read_midifile("basic_drum.mid")
 
-# Instantiate new track to write midi to
+# Instantiate new track to write MIDI to
 newPattern = midi.Pattern(tracks=[], resolution=pattern.resolution, format=1, tick_relative=True)
 track = midi.Track()
 newPattern.append(track)
 
 diffArray = []
-# Loop through note events of track
+# Modify each note event in the single track located at pattern[0]
 for event in pattern[0]:
   if type(event) is midi.events.NoteOnEvent:
     newNoteOn = transformEvent(event)
@@ -31,13 +31,8 @@ for event in pattern[0]:
   else:
     track.append(event)
 
-# difference between event.tick and newNoteOn
-# Add end of track event and write out the transformed file
+# Add end of track event and write out the transformed MIDI file
 eot = midi.EndOfTrackEvent(tick=1)
 track.append(eot)
 midi.write_midifile("transformed_drums.mid", newPattern)
-print("OLD: ")
-print(pattern)
-print("NEW: ")
-print(newPattern)
     
