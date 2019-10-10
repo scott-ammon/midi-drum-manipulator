@@ -29,7 +29,6 @@ def transformHiHatEvent(event):
   return midi.NoteOnEvent(tick=newTick, velocity=newVelocity, pitch=event.data[0])
 
 def transformEvent(event):
-  # logic to transform event based on the note/instrument
   if event.data[0] == 36:
     return transformKickEvent(event)
   elif event.data[0] == 40:
