@@ -3,19 +3,29 @@ import random
 
 # implement a stack that records the previous note and tick here
 
+
+def randomizeVelocity(velocity, min, max):
+  return velocity + random.randint(min, max)
+
+def dragNote(tick, amount):
+  return tick + random.randint(-amount, 0)
+
+def rushNote(tick, amount):
+  return tick + random.randint(0, amount)
+
 # add logic
 def transformKickEvent(event):
-  newVelocity = event.data[1] + random.randint(-10, 10)
+  newVelocity = randomizeVelocity(event.data[1], -10, 10)
   return midi.NoteOnEvent(tick=event.tick, velocity=newVelocity, pitch=event.data[0])
 
 def transformSnareEvent(event):
-  newVelocity = event.data[1] + random.randint(-5, 25)
-  newTick = event.tick + random.randint(0,5)
+  newVelocity = randomizeVelocity(event.data[1], -5, 25)
+  newTick = rushNote(event.tick, 5)
   return midi.NoteOnEvent(tick=newTick, velocity=newVelocity, pitch=event.data[0])
 
 def transformHiHatEvent(event):
-  newVelocity = event.data[1] + random.randint(-25, 25)
-  newTick = event.tick + random.randint(0,12)
+  newVelocity = randomizeVelocity(event.data[1], -25, 25)
+  newTick = rushNote(event.tick, 12)
   return midi.NoteOnEvent(tick=newTick, velocity=newVelocity, pitch=event.data[0])
 
 def transformEvent(event):
