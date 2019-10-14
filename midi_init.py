@@ -16,12 +16,12 @@ for event in pattern[0]:
     newNoteOn = transformEvent(event)
     track.append(newNoteOn)
     diffArray.append({ 
-      "instrument": event.data[0], 
+      "inst": event.data[0], 
       "diff": newNoteOn.tick - event.tick
     })
   elif type(event) is midi.events.NoteOffEvent:
     for obj in diffArray:
-      if obj["instrument"] == event.data[0]:
+      if obj["inst"] == event.data[0]:
         newTick = event.tick + obj["diff"]
         diffArray.remove(obj)
       else:
@@ -34,5 +34,5 @@ for event in pattern[0]:
 # Add end of track event and write out the transformed MIDI file
 eot = midi.EndOfTrackEvent(tick=1)
 track.append(eot)
-midi.write_midifile("transformed_drums.mid", newPattern)
+midi.write_midifile("output_transformed.mid", newPattern)
     
