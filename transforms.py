@@ -4,6 +4,10 @@ import random
 # implement a stack that records the previous note and tick here
 
 def randomizeVelocity(velocity, min, max):
+  if (velocity + max > 127):
+    max = 127 - velocity
+  if (velocity + min < 0):
+    min = -velocity
   return velocity + random.randint(min, max)
 
 def dragNote(tick, amount):
